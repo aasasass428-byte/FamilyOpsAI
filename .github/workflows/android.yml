@@ -1,10 +1,13 @@
-name: Test FamilyOps AI
-on: [workflow_dispatch]
-
-
+name: Test
+'on': workflow_dispatch
 jobs:
-test:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+     - run: echo Hello
 runs-on: ubuntu-latest
 steps:
-- name: Test
-run: echo "Workflow syntax is valid"
+    defaults:
+      - name: Test
+       defaults:
+           run: echo "Workflow syntax is valid"
