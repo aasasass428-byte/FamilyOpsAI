@@ -1,6 +1,4 @@
 name: Build FamilyOps AI
-
-
 'on':
 workflow_dispatch:
 
