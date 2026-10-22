@@ -1,59 +1,17 @@
-name: Build FamilyOps AI APK
+name: FamilyOps AI Build
 'on': [push, workflow_dispatch]
-
-
-permissions:
-contents: read
 
 
 jobs:
 build:
 runs-on: ubuntu-latest
-
-
 steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+- name: Check repository
+uses: actions/checkout@v4
 
-  - name: Install Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
 
-  - name: Install Android SDK
-    uses: android-actions/setup-android@v3
+  - name: Show files
+    run: ls -la
 
-  - name: Install Android tools
-    run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
-  - name: Install Gradle
-    uses: gradle/actions/setup-gradle@v4
-    with:
-      gradle-version: '8.9'
-
-  - name: Extract improved project
-    run: |
-      mkdir -p improved
-      unzip -o FamilyOpsAI_Improved_v0.2.0.zip -d improved
-      echo "Project files:"
-      find improved -name settings.gradle.kts -type f
-
-  - name: Build improved APK
-    run: |
-      PROJECT_FILE=$(find improved -name settings.gradle.kts -type f -print -quit)
-      if [ -z "$PROJECT_FILE" ]; then
-        echo "ERROR: settings.gradle.kts not found in ZIP"
-        exit 1
-      fi
-      PROJECT_DIR=$(dirname "$PROJECT_FILE")
-      cd "$PROJECT_DIR"
-      gradle assembleDebug
-
-  - name: Upload improved APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: FamilyOpsAI-Improved-APK
-      path: improved/**/app/build/outputs/apk/debug/app-debug.apk
-      if-no-files-found: error
 
