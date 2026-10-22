@@ -1,23 +1,16 @@
 name: Build FamilyOps AI APK
-
-
-on: [push, workflow_dispatch]
-
+'on': [push, workflow_dispatch]
 
 jobs:
-build:
-runs-on: ubuntu-latest
-steps:
-- name: Checkout repository
-uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-
-  - name: Check repository files
-    run: |
-      echo "Checking repository"
-      ls -la
-      echo "Checking improved ZIP"
-      ls -l FamilyOpsAI_Improved_v0.2.0.zip
-
-
-
+      - name: Check repository files
+        run: |
+          echo "Checking repository"
+          ls -la
+          echo "Checking improved ZIP"
+          ls -l FamilyOpsAI_Improved_v0.2.0.zip
