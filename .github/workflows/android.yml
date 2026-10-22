@@ -1,44 +1,63 @@
 name: Build FamilyOps AI APK
 
+
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+workflow_dispatch:
+push:
+branches:
+- main
+
 
 permissions:
-  contents: read
+contents: read
+
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Download source code
-        uses: actions/checkout@v4
 
-      - name: Install Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
+steps:
+  - name: Download repository
+    uses: actions/checkout@v4
 
-      - name: Install Android SDK
-        uses: android-actions/setup-android@v4
+  - name: Extract improved project
+    run: |
+      mkdir improved
+      unzip -o FamilyOpsAI_Improved_v0.2.0.zip -d improved
+      echo "Extracted project files:"
+      find improved -maxdepth 3 -type f | head -100
 
-      - name: Install Android tools
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+  - name: Install Java
+    uses: actions/setup-java@v5
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Install Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+  - name: Install Android SDK
+    uses: android-actions/setup-android@v4
 
-      - name: Build APK
-        run: gradle assembleDebug
+  - name: Install Android tools
+    run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Save APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: FamilyOpsAI-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+  - name: Install Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.9'
+
+  - name: Build improved APK
+    run: |
+      PROJECT_DIR=$(find improved -name settings.gradle.kts -type f -print -quit | xargs dirname)
+      echo "Building project in: $PROJECT_DIR"
+      cd "$PROJECT_DIR"
+      gradle assembleDebug
+
+  - name: Save APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: FamilyOpsAI-debug-apk-v0.2.0
+      path: improved/**/app/build/outputs/apk/debug/app-debug.apk
+      if-no-files-found: error
+
+
+
