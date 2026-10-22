@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v5
+        uses: android-actions/setup-android@v4
 
       - name: Build APK
         run: |
@@ -28,7 +28,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: FamilyOpsAI-debug
           path: app/build/outputs/apk/debug/*.apk
