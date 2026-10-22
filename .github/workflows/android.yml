@@ -1,7 +1,7 @@
 name: Build FamilyOps AI APK
 
 
-on:
+'on':
 workflow_dispatch:
 push:
 branches:
@@ -26,7 +26,7 @@ steps:
       mkdir improved
       unzip -o FamilyOpsAI_Improved_v0.2.0.zip -d improved
       echo "Extracted project files:"
-      find improved -maxdepth 3 -type f | head -100
+      find improved -name settings.gradle.kts -type f
 
   - name: Install Java
     uses: actions/setup-java@v5
@@ -47,7 +47,12 @@ steps:
 
   - name: Build improved APK
     run: |
-      PROJECT_DIR=$(find improved -name settings.gradle.kts -type f -print -quit | xargs dirname)
+      PROJECT_FILE=$(find improved -name settings.gradle.kts -type f -print -quit)
+      if [ -z "$PROJECT_FILE" ]; then
+        echo "ERROR: settings.gradle.kts not found in the ZIP archive"
+        exit 1
+      fi
+      PROJECT_DIR=$(dirname "$PROJECT_FILE")
       echo "Building project in: $PROJECT_DIR"
       cd "$PROJECT_DIR"
       gradle assembleDebug
